@@ -3,12 +3,6 @@ React2Shell Scanner - FastAPI Backend
 CVE-2025-55182 & CVE-2025-66478 Detection API
 """
 
-import sys
-from pathlib import Path
-
-# Add parent directory to path to import scanner
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, HttpUrl
@@ -23,10 +17,12 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS configuration - adjust in production
+# CORS configuration
+import os
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["*"],  # Allow all origins for public API
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
